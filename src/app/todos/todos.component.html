@@ -1,0 +1,39 @@
+<br />
+<div class="row">
+	<button type="button" class="btn btn-success btn-sm">Add</button>
+</div>
+
+<!-- TODO: Create a separate ToDo component. Handle 3 variations -->
+
+<div class="row" *ngFor="let todo of d0Service.todos">
+	<div class="card">
+		<div class="card-header">
+			<div class="col-lg-8 col-md-8">
+				{{todo.title}}
+			</div>
+			<div class="col-lg-4 col-md-4">
+				<button type="button" class="btn btn-primary btn-sm">Edit</button>
+				<button type="button" class="btn btn-danger btn-sm">Delete</button>
+			</div>
+		</div>
+		<div class="card-body">
+			<p>{{todo.text}}</p>
+			<u class="list-group">
+				<li *ngFor="let task of todo.tasks" class="list-group-item d-flex justify-content-between align-items-center">
+					{{task.name}}
+					<span class="badge badge-success" *ngIf="task.done">Done</span>
+					<span class="badge badge-warning" *ngIf="!task.done">Pending</span>
+				</li>
+			</u>
+		</div>
+		<div class="card-footer">
+			<div class="col-lg-4 col-md-4">
+				<!-- TODO: Show status as a badge -->
+			</div>
+			<div class="col-lg-4 col-md-4"></div>
+			<div class="col-lg-4 col-md-4">
+				<!-- TODO: Show due date. If the due date is today, show timer -->
+			</div>
+		</div>
+	</div>
+</div>

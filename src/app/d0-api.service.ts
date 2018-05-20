@@ -11,7 +11,7 @@ export class D0ApiService {
 
 	constructor(public client : HttpClient) { }
 
-	getAllToDos() {
+	getToDos() {
 		this.todos = [];
 		let observableObject = this.client.get(this.API_URL + "todos");
 		observableObject.subscribe((todos : any) => {
@@ -31,7 +31,7 @@ export class D0ApiService {
 		let observableObject = this.client.get(this.API_URL + "backlogs");
 		observableObject.subscribe((backlogs : any) => {
 			console.log("Success response. backlogs: ", backlogs);
-			// Fetch todo data of each backlog
+			// Fetch complete todo data of each backlog
 			backlogs.forEach(backl => {
 				this.getToDo(backl.todoID).subscribe((todo : any) => {
 					this.backlogs.push(todo)
@@ -45,12 +45,30 @@ export class D0ApiService {
 		});
 	}
 
-	addToBackLog(todoID) {
+	addBackLog(todoID) {
 		let observableObject = this.client.post(this.API_URL + "backlog", {id: todoID});
 		observableObject.subscribe((response : any) => {
 			console.log("Success response. success: ", response.success);
 		}, (error : any) => {
 			console.log("Error response. error: ", error);
 		})
+	}
+
+	addToDo(todoData : any, tasks : any) {
+		todoData.tasks = tasks;
+		return this.client.post(this.API_URL + "todo", todoData);
+	}
+
+	addTasks(todoID, tasks) {
+		return this.client.post(this.API_URL + "todo/" + todoID + "/tasks", tasks);
+	}
+
+	updateToDo(todoID, todoData, tasksStatus) {
+		todoData.tasksStatus = tasksStatus;
+		return this.client.post(this.API_URL + "todo/" + todoID + "/update", todoData);
+	}
+
+	deleteTasks(todoID, tasksToDelete) {
+		return this.client.delete(this.API_URL + "todo/" + todoID + "/tasks");
 	}
 }
