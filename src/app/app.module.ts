@@ -12,6 +12,7 @@ import { TodosComponent } from './todos/todos.component';
 import { BacklogsComponent } from './backlogs/backlogs.component';
 import { DoneComponent } from './done/done.component';
 import { D0ApiService } from './d0-api.service';
+import { TodoComponent } from './todo/todo.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { D0ApiService } from './d0-api.service';
     AppComponent,
     TodosComponent,
     BacklogsComponent,
-    DoneComponent
+    DoneComponent,
+    TodoComponent
   ],
   imports: [
     BrowserModule,

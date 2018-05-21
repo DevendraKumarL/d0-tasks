@@ -12,4 +12,8 @@ export class TodosComponent {
 		this.d0Service.getToDos();
 	}
 
+	createToDo() {
+		
+	}
+
 }

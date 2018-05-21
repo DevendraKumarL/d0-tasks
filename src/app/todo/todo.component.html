@@ -1,0 +1,25 @@
+<!-- TODO: Use icons/badges -->
+<div class="col-lg-12 col-md-12">
+	<div class="card">
+		<div class="card-header">
+			{{todo.title}}
+		</div>
+		<div class="card-body">
+			<p>{{todo.text}}</p>
+			<u class="list-group">
+				<li *ngFor="let task of todo.tasks" class="list-group-item d-flex justify-content-between align-items-center">
+					{{task.name}}
+					<span class="badge badge-success" *ngIf="task.done">Done</span>
+					<span class="badge badge-warning" *ngIf="!task.done">Pending</span>
+				</li>
+			</u>
+		</div>
+		<div class="card-footer">
+			<div class="col-lg-8 col-md-8"></div>
+			<div class="col-lg-4 col-md-4">
+				{{todo.dueDate}}
+				<!-- TODO: Show due date. If the due date is today, implement timer -->
+			</div>
+		</div>
+	</div>
+</div>
