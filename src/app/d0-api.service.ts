@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class D0ApiService {
 
-	public API_URL :string = "http://localhost:5002/d0/";
+	public API_URL :string = "http://localhost:5001/d0/";
 
 	public todos : any = [];
 	public backlogs : any = [];

@@ -13,6 +13,7 @@ import { BacklogsComponent } from './backlogs/backlogs.component';
 import { DoneComponent } from './done/done.component';
 import { D0ApiService } from './d0-api.service';
 import { TodoComponent } from './todo/todo.component';
+import { TaskItemComponent } from './task-item/task-item.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { TodoComponent } from './todo/todo.component';
     TodosComponent,
     BacklogsComponent,
     DoneComponent,
-    TodoComponent
+    TodoComponent,
+    TaskItemComponent
   ],
   imports: [
     BrowserModule,
