@@ -71,4 +71,8 @@ export class D0ApiService {
 	deleteTasks(todoID, tasksToDelete) {
 		return this.client.delete(this.API_URL + "todo/" + todoID + "/tasks");
 	}
+
+	deleteToDo(todoID) {
+		return this.client.delete(this.API_URL + "todo/" + todoID);
+	}
 }
