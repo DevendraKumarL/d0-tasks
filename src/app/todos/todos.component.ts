@@ -14,17 +14,21 @@ declare var $ : any;
 })
 export class TodosComponent {
 
-	public createTaskItems : any = [];
-	public todoTitle : string;
-	public todoText : string;
-	public todoDueDate : any;
+	public todoData : any = {
+		title: undefined,
+		text: undefined,
+		dueDate: undefined,
+		tasks: []
+	}
+
+	public createMode : boolean = true;
 
 	@ViewChild("todoModal")
 	public todoModal : ElementRef;
 
 	public todoForm : FormGroup;
 	public formError : boolean = false;
-	public errMssg : string;
+	public formErrMsg : string;
 
 	public errorOccured : boolean = false;
 	public errorMessage : string;
@@ -39,29 +43,38 @@ export class TodosComponent {
 	}
 
 	addTaskItem() {
-		this.createTaskItems.push({name: ""});
+		this.todoData.tasks.push({name: "", done: false});
 	}
 
 	removeTaskItem(i) {
-		this.createTaskItems.splice(i, 1);
+		this.todoData.tasks.splice(i, 1);
 	}
 
 	clearToDoData() {
-		this.todoText = undefined;
-		this.todoTitle = undefined;
-		this.todoDueDate = undefined;
+		// clear todo data
+		this.todoData = {
+			title: undefined,
+			text: undefined,
+			dueDate: undefined,
+			tasks: []
+		}
+
+		// reset createMode flag
+		this.createMode = true;
+
+		// clear todo form
 		this.todoForm.reset();
-		this.createTaskItems = [];
+
+		// clear error messages and flags
+		this.errorOccured = false;
+		this.errorMessage = "";
+		this.formError = false;
+		this.formErrMsg = "";
 	}
 
 	createToDo() {
-		let todoData = {
-			title: this.todoTitle,
-			text: this.todoText,
-			dueDate: this.todoDueDate
-		};
-		console.log("Todo: ", todoData, " Task: ", this.createTaskItems);
-		this.d0Service.addToDo(todoData, this.createTaskItems).subscribe((response : any) => {
+		console.log("CreateTodo: ", this.todoData);
+		this.d0Service.addToDo(this.todoData).subscribe((response : any) => {
 			console.log("Sucess response. message: ", response.success);
 			$(this.todoModal.nativeElement).modal("hide");
 			this.clearToDoData();
@@ -71,10 +84,39 @@ export class TodosComponent {
 			console.log("Error response. error: ", error);
 			this.formError = true;
 			// TODO: Handle when api server is down
-			this.errMssg = error.error.error;
+			this.formErrMsg = error.error.error;
 		});
 	}
 
+	updateToDo() {
+		console.log("EditTodo: ", this.todoData);
+		this.d0Service.updateToDo(this.todoData.todoID, this.todoData).subscribe((response : any) => {
+			console.log("Success response. success: ", response.success);
+			$(this.todoModal.nativeElement).modal("hide");
+			this.clearToDoData();
+			// get the upated list of todos
+			this.d0Service.getToDos();
+		}, (error: any) => {
+			console.log("Error response. error: ", error);
+			this.formError = true;
+			// TODO: Handle when api server is down
+			this.formErrMsg = error.error.error;
+		});
+	}
+
+	invokeEditToDo(todo) {
+		this.createMode = false;
+		// check with todo form
+		this.todoData = {
+			title: todo.title,
+			text: todo.text,
+			dueDate: todo.dueDate,
+			tasks: todo.tasks,
+			todoId: todo._id
+		}
+	}
+
+	// TODO: Handle confirmation modal
 	deleteToDo(todoID) {
 		this.d0Service.deleteToDo(todoID).subscribe((response : any) => {
 			console.log("Success response. success: ", response.success);
@@ -84,7 +126,7 @@ export class TodosComponent {
 			console.log("Error response. error: ", error);
 			this.errorOccured = true;
 			// TODO: Handle when api server is down
-			this.errorMessage = error.error.errMssg;
+			this.errorMessage = error.error.error;
 		});
 	}
 

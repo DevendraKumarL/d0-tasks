@@ -17,7 +17,7 @@
 	<div class="col-lg-12 col-md-12">
 		<div class="col-lg-7 col-md-7"></div>
 		<div class="col-lg-5 col-md-5 ml-auto">
-			<button type="button" class="btn btn-primary btn-sm">Edit</button>
+			<button type="button" class="btn btn-primary btn-sm" (click)="invokeEditToDo(todo)">Edit</button>
 			<!-- TODO: Confirm modal for delete operation -->
 			<button type="button" class="btn btn-danger btn-sm" (click)="deleteToDo(todo._id)">Delete</button>
 		</div>
@@ -28,22 +28,30 @@
 
 <!-- Modal -->
 <div class="modal fade" #todoModal id="addToDoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<!-- TODO: move this modal to a separate component -->
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 		<div class="modal-header">
-			<h5 class="modal-title">New T0D0</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<h5 class="modal-title">
+				<div *ngIf="createMode">
+					New T0D0
+				</div>
+				<div *ngIf="!createMode">
+					Edit T0D0
+				</div>
+			</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearToDoData()">
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
 		<div class="modal-body">
 			<form [formGroup]="todoForm">
 				<div class="alert alert-danger" *ngIf="formError">
-					{{errMsg}}
+					{{formErrMsg}}
 				</div>
 				<div class="form-group">
 					<label for="">Title</label>
-					<input type="text" name="title" placeholder="Title" class="form-control" [(ngModel)]="todoTitle" formControlName="title">
+					<input type="text" name="title" placeholder="Title" class="form-control" [(ngModel)]="todoData.title" formControlName="title">
 					<div *ngIf="todoForm.controls.title.invalid && (todoForm.controls.title.dirty || todoForm.controls.title.touched)">
 						<div class="text-danger" *ngIf="todoForm.controls.title.errors.required">
 							Title is required
@@ -52,7 +60,7 @@
 				</div>
 				<div class="form-group">
 					<label for="">Description</label>
-					<textarea name="text" cols="30" rows="2" class="form-control" placeholder="Description" [(ngModel)]="todoText" formControlName="text">
+					<textarea name="text" cols="30" rows="2" class="form-control" placeholder="Description" [(ngModel)]="todoData.text" formControlName="text">
 					</textarea>
 					<div *ngIf="todoForm.controls.text.invalid && (todoForm.controls.text.dirty || todoForm.controls.text.touched)">
 						<div class="text-danger" *ngIf="todoForm.controls.text.errors.required">
@@ -62,7 +70,7 @@
 				</div>
 				<div class="form-group">
 					<label for="">DueDate</label>
-					<input type="date" name="dueDate" placeholder="Dead Line" class="form-control" [(ngModel)]="todoDueDate" formControlName="dueDate">
+					<input type="date" name="dueDate" placeholder="Dead Line" class="form-control" [(ngModel)]="todoData.dueDate" formControlName="dueDate">
 					<div *ngIf="todoForm.controls.dueDate.invalid && (todoForm.controls.dueDate.dirty || todoForm.controls.dueDate.touched)">
 						<div class="text-danger" *ngIf="todoForm.controls.dueDate.errors.required">
 							DueDate is required
@@ -74,20 +82,27 @@
 						Add Tasks+
 					</button>
 				</p>
-				<div class="form-inline" *ngFor="let item of createTaskItems; let i = index">
+				<div class="form-inline" *ngFor="let item of todoData.tasks; let i = index">
+					<!-- TODO: convert this task-item from input to checkbox -->
+					<!-- TODO: when in edit mode, track tasks status -->
 					<task-item [item]="item"></task-item>&nbsp;&nbsp;
 					<button type="button" class="close" (click)="removeTaskItem(i)">
 						<img src="assets\images\close.png" alt="" width="35px" height="35px">
 					</button><br /><br />
 				</div>
 				<div class="alert alert-danger" *ngIf="formError">
-					{{errMsg}}
+					{{formErrMsg}}
 				</div>
 			</form>
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-default btn-sm" data-dismiss="modal" (click)="clearToDoData()">Cancel</button>
-			<button type="button" class="btn btn-primary btn-sm" #todoSubmit (click)="createToDo()" [disabled]="!todoForm.valid || formError">Submit</button>
+			<div *ngIf="createMode">
+				<button type="button" class="btn btn-primary btn-sm" (click)="createToDo()" [disabled]="!todoForm.valid || formError">Submit</button>
+			</div>
+			<div *ngIf="!createMode">
+				<button type="button" class="btn btn-primary btn-sm" (click)="updateToDo()" [disabled]="!todoForm.valid || formError">Submit</button>
+			</div>
 		</div>
 		</div>
 	</div>

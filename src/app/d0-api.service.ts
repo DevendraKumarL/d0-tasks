@@ -54,8 +54,7 @@ export class D0ApiService {
 		})
 	}
 
-	addToDo(todoData : any, tasks : any) {
-		todoData.tasks = tasks;
+	addToDo(todoData : any) {
 		return this.client.post(this.API_URL + "todo", todoData);
 	}
 
@@ -63,8 +62,7 @@ export class D0ApiService {
 		return this.client.post(this.API_URL + "todo/" + todoID + "/tasks", tasks);
 	}
 
-	updateToDo(todoID, todoData, tasksStatus) {
-		todoData.tasksStatus = tasksStatus;
+	updateToDo(todoID, todoData) {
 		return this.client.post(this.API_URL + "todo/" + todoID + "/update", todoData);
 	}
 

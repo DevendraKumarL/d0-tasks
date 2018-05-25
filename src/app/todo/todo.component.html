@@ -6,6 +6,7 @@
 		</div>
 		<div class="card-body">
 			<p>{{todo.text}}</p>
+			<!-- TODO: make this has a checklist of items but read-only -->
 			<u class="list-group">
 				<li *ngFor="let task of todo.tasks" class="list-group-item d-flex justify-content-between align-items-center">
 					{{task.name}}
