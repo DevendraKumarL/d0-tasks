@@ -26,6 +26,26 @@ export class D0ApiService {
 		return this.client.get(this.API_URL + "todo/" + todoID);
 	}
 
+	addToDo(todoData : any) {
+		return this.client.post(this.API_URL + "todo", todoData);
+	}
+
+	updateToDo(todoID, todoData) {
+		return this.client.put(this.API_URL + "todo/" + todoID + "/update", {updatedToDo: todoData});
+	}
+
+	deleteToDo(todoID) {
+		return this.client.delete(this.API_URL + "todo/" + todoID);
+	}
+
+	addTasks(todoID, tasks) {
+		return this.client.post(this.API_URL + "todo/" + todoID + "/tasks", tasks);
+	}
+
+	deleteTasks(todoID, tasksToDelete) {
+		return this.client.delete(this.API_URL + "todo/" + todoID + "/tasks");
+	}
+
 	getBacklogs() {
 		this.backlogs = [];
 		let observableObject = this.client.get(this.API_URL + "backlogs");
@@ -52,25 +72,5 @@ export class D0ApiService {
 		}, (error : any) => {
 			console.log("Error response. error: ", error);
 		})
-	}
-
-	addToDo(todoData : any) {
-		return this.client.post(this.API_URL + "todo", todoData);
-	}
-
-	addTasks(todoID, tasks) {
-		return this.client.post(this.API_URL + "todo/" + todoID + "/tasks", tasks);
-	}
-
-	updateToDo(todoID, todoData) {
-		return this.client.post(this.API_URL + "todo/" + todoID + "/update", todoData);
-	}
-
-	deleteTasks(todoID, tasksToDelete) {
-		return this.client.delete(this.API_URL + "todo/" + todoID + "/tasks");
-	}
-
-	deleteToDo(todoID) {
-		return this.client.delete(this.API_URL + "todo/" + todoID);
 	}
 }

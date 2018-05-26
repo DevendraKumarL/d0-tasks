@@ -5,7 +5,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 // Manually declare $ so that we can use it for jQeury within Angular Component
 declare var $ : any;
 
-/* TODO: Add comments everywhere */
+/* TODO: Implement backlog feature driven by client */
+/* TODO: Could be used to only create new tasks as a separate feature in UI */
 
 @Component({
 	selector: 'todos',
@@ -32,6 +33,11 @@ export class TodosComponent {
 
 	public errorOccured : boolean = false;
 	public errorMessage : string;
+
+	@ViewChild("delConfirmModal")
+	public delConfirmModal : ElementRef;
+
+	public deleteTodoID : string;
 
 	constructor(public d0Service : D0ApiService, public formBuilder : FormBuilder) {
 		this.d0Service.getToDos();
@@ -70,6 +76,9 @@ export class TodosComponent {
 		this.errorMessage = "";
 		this.formError = false;
 		this.formErrMsg = "";
+
+		// undefine todoID used for deleting todo
+		this.deleteTodoID = undefined;
 	}
 
 	createToDo() {
@@ -83,7 +92,7 @@ export class TodosComponent {
 		}, (error : any) => {
 			console.log("Error response. error: ", error);
 			this.formError = true;
-			// TODO: Handle when api server is down
+			// FIXME: Handle when api server is down
 			this.formErrMsg = error.error.error;
 		});
 	}
@@ -99,7 +108,7 @@ export class TodosComponent {
 		}, (error: any) => {
 			console.log("Error response. error: ", error);
 			this.formError = true;
-			// TODO: Handle when api server is down
+			// FIXME: Handle when api server is down
 			this.formErrMsg = error.error.error;
 		});
 	}
@@ -110,24 +119,30 @@ export class TodosComponent {
 		this.todoData = {
 			title: todo.title,
 			text: todo.text,
-			dueDate: todo.dueDate,
-			tasks: todo.tasks,
-			todoId: todo._id
+			dueDate: new Date(todo.dueDate).toISOString().substr(0, 10),
+			tasks: JSON.parse(JSON.stringify(todo.tasks)), // Deep clone
+			todoID: todo._id
 		}
 	}
 
-	// TODO: Handle confirmation modal
-	deleteToDo(todoID) {
-		this.d0Service.deleteToDo(todoID).subscribe((response : any) => {
-			console.log("Success response. success: ", response.success);
-			// Get the new updated list of todos
-			this.d0Service.getToDos();
-		}, (error : any) => {
-			console.log("Error response. error: ", error);
-			this.errorOccured = true;
-			// TODO: Handle when api server is down
-			this.errorMessage = error.error.error;
-		});
+	invokeDelete(todoID) {
+		this.deleteTodoID = todoID;
+	}
+
+	deleteToDo() {
+		if (this.deleteTodoID !== undefined) {
+			this.d0Service.deleteToDo(this.deleteTodoID).subscribe((response : any) => {
+				console.log("Success response. success: ", response.success);
+				$(this.delConfirmModal.nativeElement).modal("hide");
+				// Get the new updated list of todos
+				this.d0Service.getToDos();
+			}, (error : any) => {
+				console.log("Error response. error: ", error);
+				this.errorOccured = true;
+				// FIXME: Handle when api server is down
+				this.errorMessage = error.error.error;
+			});
+		}
 	}
 
 }

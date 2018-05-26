@@ -7,9 +7,6 @@ import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 })
 export class TaskItemComponent {
 
-	@ViewChild("tskItem")
-	public inputEle : ElementRef;
-
 	@Input()
 	public item : any;
 
