@@ -1,2 +1,8 @@
-<input type="checkbox" class="form-control form-control-sm" [value]="item.name" [(ngModel)]="item.done" />
-<input type="text" class="form-control form-control-sm" [(ngModel)]="item.name" [value]="item.name">
+<div class="input-group">
+    <div class="input-group-prepend">
+        <div class="input-group-text">
+            <input type="checkbox" [value]="item.name" [(ngModel)]="item.done" />
+        </div>
+    </div>
+    <input type="text" class="form-control form-control-sm" [value]="item.name" [(ngModel)]="item.name" />
+</div>

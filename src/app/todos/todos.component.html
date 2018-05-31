@@ -12,20 +12,24 @@
 	</div>
 </div>
 
-<div class="row" *ngFor="let todo of d0Service.todos">
-	<div class="col-lg-12 col-md-12">
-		<div class="col-lg-7 col-md-7"></div>
-		<div class="col-lg-5 col-md-5 ml-auto">
-			<button type="button" class="btn btn-primary btn-sm" (click)="invokeEditToDo(todo)" data-toggle="modal" data-target="#todoModal">
-				<i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;Edit
-			</button>
-			<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDelete(todo._id)">
-				<i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete
-			</button>
+<br />
+
+<!-- <div class="row"> -->
+	<div class="card-columns">
+		<div *ngFor="let todo of d0Service.todos">
+			<div class="btn-group" role="group">
+				<button type="button" class="btn btn-light btn-sm" (click)="invokeEditToDo(todo)" data-toggle="modal" data-target="#todoModal">
+					<i class="fa fa-pencil" aria-hidden="true"></i>
+				</button>
+				<button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDelete(todo._id)">
+					<i class="fa fa-trash" aria-hidden="true"></i>
+				</button>
+			</div>
+			<todo [todo]="todo"></todo>
+			<br>
 		</div>
 	</div>
-	<todo [todo]="todo"></todo>
-</div>
+<!-- </div> -->
 
 
 <!-- T0D0 Modal -->
@@ -87,8 +91,12 @@
 				<div class="form-inline" *ngFor="let item of todoData.tasks; let i = index">
 					<task-item [item]="item"></task-item>&nbsp;&nbsp;
 					<button type="button" class="close" (click)="removeTaskItem(i)">
-						<img src="assets\images\close.png" alt="" width="35px" height="35px">
+						<!-- <img src="assets\images\close.png" alt="" width="35px" height="35px"> -->
+						<i class="fa fa-times-circle" aria-hidden="true"></i>
 					</button><br /><br />
+				</div>
+				<div class="text-danger" *ngIf="tasksError">
+					{{tasksErrMsg}}
 				</div>
 				<div class="alert alert-danger" *ngIf="formError">
 					<b>{{formErrMsg}}</b>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 
 @Component({
 	selector: 'todo',
@@ -9,5 +9,9 @@ export class TodoComponent {
 
 	@Input()
 	public todo : any;
+
+	ngOnInit() {
+		this.todo.dueDate = new Date(this.todo.dueDate).toISOString().substr(0, 10);
+	}
 
 }

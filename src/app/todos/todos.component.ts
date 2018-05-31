@@ -28,8 +28,11 @@ export class TodosComponent {
 	public todoModal : ElementRef;
 
 	public todoForm : FormGroup;
+
 	public formError : boolean = false;
 	public formErrMsg : string;
+	public tasksError : boolean = false;
+	public tasksErrMsg : string;
 
 	public errorOccured : boolean = false;
 	public errorMessage : string;
@@ -54,6 +57,10 @@ export class TodosComponent {
 
 	removeTaskItem(i) {
 		this.todoData.tasks.splice(i, 1);
+		if (this.todoData.tasks.length === 0 ) {
+			this.tasksError = false;
+			this.tasksErrMsg = "";
+		}
 	}
 
 	clearToDoData() {
@@ -76,13 +83,34 @@ export class TodosComponent {
 		this.errorMessage = "";
 		this.formError = false;
 		this.formErrMsg = "";
+		this.tasksError = false;
+		this.tasksErrMsg = "";
 
 		// undefine todoID used for deleting todo
 		this.deleteTodoID = undefined;
 	}
 
+	private checkTasksEmpty() {
+		this.tasksError = false;
+		this.tasksErrMsg = "";
+		for (let i = 0; i < this.todoData.tasks.length; ++i) {
+			if (this.todoData.tasks[i].name === "") {
+				this.tasksError = true
+				break;
+			}
+		}
+		if (this.tasksError) {
+			this.tasksErrMsg = "Tasks cannot be empty";
+			return false;
+		}
+		return true;
+	}
+
 	createToDo() {
 		console.log("CreateTodo: ", this.todoData);
+		if (!this.checkTasksEmpty()) {
+			return
+		}
 		this.d0Service.addToDo(this.todoData).subscribe((response : any) => {
 			console.log("Sucess response. message: ", response.success);
 			$(this.todoModal.nativeElement).modal("hide");
@@ -99,6 +127,9 @@ export class TodosComponent {
 
 	updateToDo() {
 		console.log("EditTodo: ", this.todoData);
+		if (!this.checkTasksEmpty()) {
+			return;
+		}
 		this.d0Service.updateToDo(this.todoData.todoID, this.todoData).subscribe((response : any) => {
 			console.log("Success response. success: ", response.success);
 			$(this.todoModal.nativeElement).modal("hide");
