@@ -8,6 +8,6 @@ import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 export class TaskItemComponent {
 
 	@Input()
-	public item : any;
+	public item: any;
 
 }

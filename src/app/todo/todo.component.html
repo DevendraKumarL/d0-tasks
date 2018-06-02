@@ -1,23 +1,47 @@
+<!-- TODO: Icons for everything -->
 <div class="card">
 	<div class="card-header">
 		{{todo.title}}
 	</div>
 	<div class="card-body">
-		<p class="card-text">{{todo.text}}</p>
-		<div class="list-group">
-			<button type="button" *ngFor="let task of todo.tasks" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-				{{task.name}}
-				<span class="badge badge-success badge-pill" *ngIf="task.done">
-					<i class="fa fa-check" aria-hidden="true"></i>
-				</span>
-				<span class="badge badge-secondary badge-pill" *ngIf="!task.done">
-					<i class="fa fa-clock-o" aria-hidden="true"></i>
-				</span>
-			</button>
+		<p class="card-text font-weight-light">{{todo.text}}</p>
+		<div *ngIf="todo.tasks.length > 0">
+			<label>
+				Tasks&nbsp;
+				<i class="fa fa-list-alt" aria-hidden="true"></i>
+			</label>
+			<label *ngFor="let task of todo.tasks" class="font-weight-light checkbox-inline" style="display: block;">
+				<input type="checkbox" [ngModel]="task.done" [value]="task.name" disabled/> {{task.name}}
+			</label>
 		</div>
 	</div>
 	<div class="card-footer">
-		<!-- TODO: Show due date. If the due date is today, implement timer -->
-		{{todo.dueDate}}
+		<div *ngIf="dueStatus === undefined">
+			<span class="badge badge-info">
+				<i class="fa fa-clock-o" aria-hidden="true">&nbsp;</i>
+				{{dueDateSimple}}
+			</span>
+		</div>
+		<div *ngIf="dueStatus !== undefined">
+			<span class="badge badge-danger" *ngIf="dueStatus">
+				<i class="fa fa-clock-o" aria-hidden="true">&nbsp;</i>
+				{{dueDateSimple}}
+			</span>
+			<span class="badge badge-warning" *ngIf="!dueStatus">
+				<i class="fa fa-clock-o" aria-hidden="true">&nbsp;</i>
+				{{dueDateSimple}}
+			</span>
+		</div>
 	</div>
 </div>
+<!-- <div class="list-group">
+<a href="#" *ngFor="let task of todo.tasks" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+	{{task.name}}
+	<span class="badge badge-pill" *ngIf="task.done">
+		<i class="fa fa-check" aria-hidden="true"></i>
+	</span>
+	<span class="badge badge-pill" *ngIf="!task.done">
+		<i class="fa fa-clock-o" aria-hidden="true"></i>
+	</span>
+</a>
+</div> -->

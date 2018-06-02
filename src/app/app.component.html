@@ -1,32 +1,34 @@
 <div class="container">
-  <br />
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">
-      <i class="fa fa-laptop" aria-hidden="true"></i> d0 <i class="fa fa-angle-double-up" aria-hidden="true"></i>
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item" [routerLinkActive]="'active'">
-          <a class="nav-link" [routerLink]="'todos'">
-            <i class="fa fa-list-alt" aria-hidden="true"></i> Do
-          </a>
-        </li>
-        <li class="nav-item" [routerLinkActive]="'active'">
-          <a class="nav-link" [routerLink]="'done'">
-            <i class="fa fa-check-square" aria-hidden="true"></i> Done
-          </a>
-        </li>
-        <li class="nav-item" [routerLinkActive]="'active'">
-          <a class="nav-link" [routerLink]="'backlogs'">
-            <i class="fa fa-clock-o" aria-hidden="true"></i> Backlogs
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <br />
-  <router-outlet></router-outlet>
+	<br />
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="#">
+			<i class="fa fa-laptop" aria-hidden="true"></i> d0
+			<i class="fa fa-angle-double-up" aria-hidden="true"></i>
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+		 aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item" [routerLinkActive]="'active'">
+					<a class="nav-link" [routerLink]="'todos'">
+						<i class="fa fa-list-alt" aria-hidden="true"></i> Do [{{d0Service.totalTodos}}]
+					</a>
+				</li>
+				<li class="nav-item" [routerLinkActive]="'active'">
+					<a class="nav-link" [routerLink]="'done'">
+						<i class="fa fa-check-square" aria-hidden="true"></i> Done [{{d0Service.done.length}}]
+					</a>
+				</li>
+				<li class="nav-item" [routerLinkActive]="'active'">
+					<a class="nav-link" [routerLink]="'backlogs'">
+						<i class="fa fa-clock-o" aria-hidden="true"></i> Backlogs [{{d0Service.backlogs.length}}]
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<br />
+	<router-outlet></router-outlet>
 </div>

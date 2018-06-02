@@ -1,0 +1,61 @@
+<div class="row">
+	<div class="alert alert-danger" *ngIf="errorOccured">
+		{{errorMsg}}
+	</div>
+</div>
+
+<div class="card-columns">
+	<div *ngFor="let todo of d0Service.done">
+		<div class="btn-group" role="group">
+			<button type="button" class="btn btn-secondary btn-sm" (click)="invokeNotDoneToDo(todo._id)" data-toggle="modal" data-target="#notDoneConfirm">
+				<i class="fa fa-times-circle" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteTodo(todo._id)">
+				<i class="fa fa-trash" aria-hidden="true"></i>
+			</button>
+		</div>
+		<todo [todo]="todo"></todo>
+	</div>
+</div>
+
+<!-- Not Done TODO Confirmation modal -->
+<div class="modal fade" #notDoneConfirmModal id="notDoneConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Confirm Not Done</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				Are you sure you have not done with this T0D0?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="clearData()">Cancel</button>
+				<button type="button" class="btn btn-primary btn-sm" (click)="updateDoneStatus()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Delete TODO Confirmation modal -->
+<div class="modal fade" #delConfirmModal id="deleteConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Confirm Deletion</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete this T0D0?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="clearData()">Cancel</button>
+				<button type="button" class="btn btn-primary btn-sm" (click)="deleteToDo()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>

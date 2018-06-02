@@ -4,19 +4,54 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class D0ApiService {
 
-	public API_URL :string = "http://localhost:5001/d0/";
+	public API_URL: string = "http://localhost:5001/d0/";
 
-	public todos : any = [];
-	public backlogs : any = [];
+	public todos: any = [];
+	public backlogs: any = [];
+	public done: any = [];
 
-	constructor(public client : HttpClient) { }
+	public totalTodos: number = 0;
+
+	constructor(public client: HttpClient) { }
 
 	getToDos() {
 		this.todos = [];
+		this.done = [];
+		this.backlogs = [];
 		let observableObject = this.client.get(this.API_URL + "todos");
-		observableObject.subscribe((todos : any) => {
-			console.log("Success response. todos: ", todos);
+		observableObject.subscribe((todos: any) => {
+			console.log("Success response");
 			this.todos = todos;
+			// process somethings internally for the app
+			for (let i = 0; i < this.todos.length; ++i) {
+				// 1. add the todo to done list if done: true
+				if (this.todos[i].done) {
+					this.done.push(JSON.parse(JSON.stringify(this.todos[i]))); // deep clone
+				}
+				let tasksDone = true;
+
+				// 2. check if all the tasks in a todo are done then add a property allTasksDone: true locally
+				for (let j = 0; j < this.todos[i].tasks.length; ++j) {
+					if (!this.todos[i].tasks[j].done) {
+						tasksDone = false;
+						break;
+					}
+				}
+				this.todos[i].allTasksDone = tasksDone;
+
+				// 3. check if a todo is behind schedule then add a property backlog: true locally
+				let currentDate = new Date();
+				let date = new Date(this.todos[i].dueDate);
+				let backlogFlag = false;
+				if ((!this.todos[i].done) && (date.getTime() < currentDate.getTime())) {
+					backlogFlag = true;
+					this.backlogs.push(JSON.parse(JSON.stringify(this.todos[i]))) // deep clone
+				}
+				this.todos[i].backlog = backlogFlag;
+			}
+			console.log("todos: ", this.todos);
+			console.log("done: ", this.done);
+			this.totalTodos = this.todos.length - (this.done.length + this.backlogs.length)
 		}, (error) => {
 			console.log("Error response. error: ", error);
 		});
@@ -26,51 +61,19 @@ export class D0ApiService {
 		return this.client.get(this.API_URL + "todo/" + todoID);
 	}
 
-	addToDo(todoData : any) {
+	addToDo(todoData: any) {
 		return this.client.post(this.API_URL + "todo", todoData);
 	}
 
 	updateToDo(todoID, todoData) {
-		return this.client.put(this.API_URL + "todo/" + todoID + "/update", {updatedToDo: todoData});
+		return this.client.put(this.API_URL + "todo/" + todoID + "/update", { updatedToDo: todoData });
 	}
 
 	deleteToDo(todoID) {
 		return this.client.delete(this.API_URL + "todo/" + todoID);
 	}
 
-	addTasks(todoID, tasks) {
-		return this.client.post(this.API_URL + "todo/" + todoID + "/tasks", tasks);
-	}
-
-	deleteTasks(todoID, tasksToDelete) {
-		return this.client.delete(this.API_URL + "todo/" + todoID + "/tasks");
-	}
-
-	getBacklogs() {
-		this.backlogs = [];
-		let observableObject = this.client.get(this.API_URL + "backlogs");
-		observableObject.subscribe((backlogs : any) => {
-			console.log("Success response. backlogs: ", backlogs);
-			// Fetch complete todo data of each backlog
-			backlogs.forEach(backl => {
-				this.getToDo(backl.todoID).subscribe((todo : any) => {
-					this.backlogs.push(todo)
-				}, (error : any) => {
-					console.log("Error response. error: ", error)
-				})
-			});
-			console.log("backlogs: ", this.backlogs)
-		}, (error : any) => {
-			console.log("Error response. error: ", error);
-		});
-	}
-
-	addBackLog(todoID) {
-		let observableObject = this.client.post(this.API_URL + "backlog", {id: todoID});
-		observableObject.subscribe((response : any) => {
-			console.log("Success response. success: ", response.success);
-		}, (error : any) => {
-			console.log("Error response. error: ", error);
-		})
+	updateDoneStatus(todoID, done) {
+		return this.client.put(this.API_URL + "todo/" + todoID, { done: done });
 	}
 }

@@ -14,5 +14,10 @@ export let routes = [
     {
         path: "backlogs",
         component: BacklogsComponent
+    },
+    {
+        path: "",
+        redirectTo: "todos",
+        pathMatch: "full"
     }
 ];

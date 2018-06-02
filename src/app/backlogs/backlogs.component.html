@@ -1,0 +1,61 @@
+<div class="card-columns">
+	<div *ngFor="let todo of d0Service.backlogs">
+		<div class="btn-group" role="group">
+			<button type="button" class="btn btn-primary btn-sm" (click)="invokeEditToDo(todo)" data-toggle="modal" data-target="#todoModal">
+				<i class="fa fa-pencil" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDelete(todo._id)">
+				<i class="fa fa-trash" aria-hidden="true"></i>
+			</button>
+			<button type="button" *ngIf="todo.tasks.length === 0 || todo.allTasksDone" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#doneConfirm" (click)="invokeDoneToDo(todo._id)">
+				<i class="fa fa-check" aria-hidden="true"></i>
+			</button>
+		</div>
+		<todo [todo]="todo"></todo>
+	</div>
+</div>
+
+<!-- T0D0 modal for edit -->
+<todo-modal [createMode]="createMode"></todo-modal>
+
+<!-- Delete TODO Confirmation modal -->
+<div class="modal fade" #delConfirmModal id="deleteConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Confirm Deletion</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete this T0D0?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="clearData()">Cancel</button>
+				<button type="button" class="btn btn-primary btn-sm" (click)="deleteToDo()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Done TODO Confirmation modal -->
+<div class="modal fade" #doneConfirmModal id="doneConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Confirm Done</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				Are you sure you're done with this T0D0?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="clearData()">Cancel</button>
+				<button type="button" class="btn btn-primary btn-sm" (click)="updateDoneStatus()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>

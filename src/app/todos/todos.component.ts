@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { D0ApiService } from '../d0-api.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { TodoModalComponent } from '../todo-modal/todo-modal.component';
 
 // Manually declare $ so that we can use it for jQeury within Angular Component
-declare var $ : any;
+declare var $: any;
 
-/* TODO: Implement backlog feature driven by client */
-/* TODO: Could be used to only create new tasks as a separate feature in UI */
+/* TODO: Mark individal todo done when there are tasks in it */
+/* TODO:  */
 
 @Component({
 	selector: 'todos',
@@ -15,164 +16,82 @@ declare var $ : any;
 })
 export class TodosComponent {
 
-	public todoData : any = {
-		title: undefined,
-		text: undefined,
-		dueDate: undefined,
-		tasks: []
-	}
+	public createMode: boolean = true;
 
-	public createMode : boolean = true;
+	@ViewChild(TodoModalComponent)
+	public todoModalChildComp: TodoModalComponent;
 
-	@ViewChild("todoModal")
-	public todoModal : ElementRef;
-
-	public todoForm : FormGroup;
-
-	public formError : boolean = false;
-	public formErrMsg : string;
-	public tasksError : boolean = false;
-	public tasksErrMsg : string;
-
-	public errorOccured : boolean = false;
-	public errorMessage : string;
+	@ViewChild("doneConfirmModal")
+	public doneConfirmModal: ElementRef;
 
 	@ViewChild("delConfirmModal")
-	public delConfirmModal : ElementRef;
+	public delConfirmModal: ElementRef;
 
-	public deleteTodoID : string;
+	public deleteTodoID: string;
+	public doneTodoID: string;
 
-	constructor(public d0Service : D0ApiService, public formBuilder : FormBuilder) {
-		this.d0Service.getToDos();
-		this.todoForm = this.formBuilder.group({
-			title: ["", Validators.compose([Validators.required])],
-			text: ["", Validators.compose([Validators.required])],
-			dueDate: ["", Validators.compose([Validators.required])],
-		});
-	}
+	public errorOccured: boolean = false;
+	public errorMessage: string;
 
-	addTaskItem() {
-		this.todoData.tasks.push({name: "", done: false});
-	}
-
-	removeTaskItem(i) {
-		this.todoData.tasks.splice(i, 1);
-		if (this.todoData.tasks.length === 0 ) {
-			this.tasksError = false;
-			this.tasksErrMsg = "";
+	constructor(public d0Service: D0ApiService) {
+		if (this.d0Service.todos.length === 0) {
+			this.d0Service.getToDos();
 		}
 	}
 
-	clearToDoData() {
-		// clear todo data
-		this.todoData = {
-			title: undefined,
-			text: undefined,
-			dueDate: undefined,
-			tasks: []
-		}
-
-		// reset createMode flag
-		this.createMode = true;
-
-		// clear todo form
-		this.todoForm.reset();
+	clearData() {
+		// undefine todoID
+		this.deleteTodoID = undefined;
+		this.doneTodoID = undefined;
 
 		// clear error messages and flags
 		this.errorOccured = false;
 		this.errorMessage = "";
-		this.formError = false;
-		this.formErrMsg = "";
-		this.tasksError = false;
-		this.tasksErrMsg = "";
-
-		// undefine todoID used for deleting todo
-		this.deleteTodoID = undefined;
-	}
-
-	private checkTasksEmpty() {
-		this.tasksError = false;
-		this.tasksErrMsg = "";
-		for (let i = 0; i < this.todoData.tasks.length; ++i) {
-			if (this.todoData.tasks[i].name === "") {
-				this.tasksError = true
-				break;
-			}
-		}
-		if (this.tasksError) {
-			this.tasksErrMsg = "Tasks cannot be empty";
-			return false;
-		}
-		return true;
-	}
-
-	createToDo() {
-		console.log("CreateTodo: ", this.todoData);
-		if (!this.checkTasksEmpty()) {
-			return
-		}
-		this.d0Service.addToDo(this.todoData).subscribe((response : any) => {
-			console.log("Sucess response. message: ", response.success);
-			$(this.todoModal.nativeElement).modal("hide");
-			this.clearToDoData();
-			// Get the new updated list of todos
-			this.d0Service.getToDos();
-		}, (error : any) => {
-			console.log("Error response. error: ", error);
-			this.formError = true;
-			// FIXME: Handle when api server is down
-			this.formErrMsg = error.error.error;
-		});
-	}
-
-	updateToDo() {
-		console.log("EditTodo: ", this.todoData);
-		if (!this.checkTasksEmpty()) {
-			return;
-		}
-		this.d0Service.updateToDo(this.todoData.todoID, this.todoData).subscribe((response : any) => {
-			console.log("Success response. success: ", response.success);
-			$(this.todoModal.nativeElement).modal("hide");
-			this.clearToDoData();
-			// get the upated list of todos
-			this.d0Service.getToDos();
-		}, (error: any) => {
-			console.log("Error response. error: ", error);
-			this.formError = true;
-			// FIXME: Handle when api server is down
-			this.formErrMsg = error.error.error;
-		});
 	}
 
 	invokeEditToDo(todo) {
-		this.createMode = false;
-		// check with todo form
-		this.todoData = {
-			title: todo.title,
-			text: todo.text,
-			dueDate: new Date(todo.dueDate).toISOString().substr(0, 10),
-			tasks: JSON.parse(JSON.stringify(todo.tasks)), // Deep clone
-			todoID: todo._id
-		}
+		this.todoModalChildComp.invokeEditToDo(todo);
 	}
 
-	invokeDelete(todoID) {
+	invokeDeleteTodo(todoID) {
 		this.deleteTodoID = todoID;
 	}
 
 	deleteToDo() {
 		if (this.deleteTodoID !== undefined) {
-			this.d0Service.deleteToDo(this.deleteTodoID).subscribe((response : any) => {
+			this.d0Service.deleteToDo(this.deleteTodoID).subscribe((response: any) => {
 				console.log("Success response. success: ", response.success);
 				$(this.delConfirmModal.nativeElement).modal("hide");
 				// Get the new updated list of todos
 				this.d0Service.getToDos();
-			}, (error : any) => {
+			}, (error: any) => {
 				console.log("Error response. error: ", error);
-				this.errorOccured = true;
+				$(this.delConfirmModal.nativeElement).modal("hide");
 				// FIXME: Handle when api server is down
+				this.errorOccured = true;
 				this.errorMessage = error.error.error;
 			});
+		}
+	}
+
+	invokeDoneToDo(todoID) {
+		this.doneTodoID = todoID;
+	}
+
+	updateDoneStatus() {
+		if (this.doneTodoID !== undefined) {
+			this.d0Service.updateDoneStatus(this.doneTodoID, true).subscribe((response: any) => {
+				console.log("Success response. success: ", response.success);
+				$(this.doneConfirmModal.nativeElement).modal("hide");
+				// get the new updated list of todos
+				this.d0Service.getToDos();
+			}, (error: any) => {
+				console.log("Error response. error: ", error);
+				$(this.doneConfirmModal.nativeElement).modal("hide");
+				// FIXME: Handle when api server is down
+				this.errorOccured = true;
+				this.errorMessage = error.error.error;
+			})
 		}
 	}
 
