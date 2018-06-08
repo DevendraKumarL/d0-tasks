@@ -1,7 +1,9 @@
 <!-- TODO: Icons for everything -->
 <div class="card">
 	<div class="card-header">
-		{{todo.title}}
+		<a [routerLink]="['/todo', todo._id]">
+			{{todo.title}}
+		</a>
 	</div>
 	<div class="card-body">
 		<p class="card-text font-weight-light">{{todo.text}}</p>

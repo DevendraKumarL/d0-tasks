@@ -1,6 +1,7 @@
 import { TodosComponent } from "./todos/todos.component";
 import { DoneComponent } from "./done/done.component";
 import { BacklogsComponent } from "./backlogs/backlogs.component";
+import { SingleTodoComponent } from "./single-todo/single-todo.component";
 
 export let routes = [
     {
@@ -19,5 +20,9 @@ export let routes = [
         path: "",
         redirectTo: "todos",
         pathMatch: "full"
+    },
+    {
+        path: "todo/:id",
+        component: SingleTodoComponent
     }
 ];
