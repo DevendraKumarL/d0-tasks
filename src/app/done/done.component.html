@@ -6,15 +6,10 @@
 
 <div class="card-columns">
 	<div *ngFor="let todo of d0Service.done">
-		<div class="btn-group" role="group">
-			<button type="button" class="btn btn-secondary btn-sm" (click)="invokeNotDoneToDo(todo._id)" data-toggle="modal" data-target="#notDoneConfirm">
-				<i class="fa fa-times-circle" aria-hidden="true"></i>
-			</button>
-			<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteTodo(todo._id)">
-				<i class="fa fa-trash" aria-hidden="true"></i>
-			</button>
-		</div>
-		<todo [todo]="todo"></todo>
+		<todo [todo]="todo" [mode]="'done'"
+			(deleteToDoEvent)="invokeDeleteTodo($event)"
+			(notDoneToDoEvent)="invokeNotDoneToDo($event)">
+		</todo>
 	</div>
 </div>
 

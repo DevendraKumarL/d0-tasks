@@ -1,25 +1,59 @@
 <!-- TODO: Icons for everything -->
-<div class="card">
-	<div class="card-header">
-		<a [routerLink]="['/todo', todo._id]">
-			{{todo.title}}
-		</a>
+<div class="card card-1">
+	<div class="btn-group todo-operations" role="group">
+		<div *ngIf="mode == 'todos'">
+			<button type="button" (click)="invokeEditToDo($event)" data-toggle="modal" data-target="#todoModal" class="btn btn-outline-primary btn-sm">
+				<i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Edit"></i>
+			</button>
+			<button type="button" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteToDo($event)" class="btn btn-outline-danger btn-sm">
+				<i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Delete"></i>
+			</button>
+			<button type="button" *ngIf="todo.tasks.length === 0 || todo.allTasksDone" data-toggle="modal" data-target="#doneConfirm"
+			 (click)="invokeDoneToDo($event)" class="btn btn-outline-success btn-sm">
+				<i class="fa fa-check" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Done"></i>
+			</button>
+		</div>
+		<div *ngIf="mode == 'done'">
+			<button type="button" (click)="invokeNotDoneToDo($event)" data-toggle="modal" data-target="#notDoneConfirm" class="btn btn-outline-secondary btn-sm">
+				<i class="fa fa-times-circle" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Not Done"></i>
+			</button>
+			<button type="button" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteToDo($event)" class="btn btn-outline-danger btn-sm">
+				<i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Delete"></i>
+			</button>
+		</div>
+		<div *ngIf="mode == 'backlog'">
+			<button type="button" (click)="invokeEditToDo($event)" data-toggle="modal" data-target="#todoModal" class="btn btn-outline-primary btn-sm">
+				<i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Edit"></i>
+			</button>
+			<button type="button" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteToDo($event)" class="btn btn-outline-danger btn-sm">
+				<i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Delete"></i>
+			</button>
+			<button type="button" *ngIf="todo.tasks.length === 0 || todo.allTasksDone" data-toggle="modal" data-target="#doneConfirm"
+			 (click)="invokeDoneToDo($event)" class="btn btn-outline-success btn-sm">
+				<i class="fa fa-check" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Done"></i>
+			</button>
+		</div>
 	</div>
-	<div class="card-body">
-		<p class="card-text font-weight-light">{{todo.text}}</p>
-		<div *ngIf="todo.tasks.length > 0">
+	<div class="todo-title">
+		<p>{{todo.title}}</p>
+	</div>
+	<div class="todo-description">
+		<p>{{todo.text}}</p>
+	</div>
+	<div *ngIf="todo.tasks.length > 0" class="todo-tasks">
+		<p>
 			<label>
 				Tasks&nbsp;
 				<i class="fa fa-list-alt" aria-hidden="true"></i>
 			</label>
-			<label *ngFor="let task of todo.tasks" class="font-weight-light checkbox-inline" style="display: block;">
+			<label *ngFor="let task of todo.tasks" class="checkbox-inline" style="display: block;">
 				<input type="checkbox" [ngModel]="task.done" [value]="task.name" disabled/> {{task.name}}
 			</label>
-		</div>
+		</p>
 	</div>
-	<div class="card-footer">
+	<div class="todo-duedate">
 		<div *ngIf="dueStatus === undefined">
-			<span class="badge badge-info">
+			<span class="badge badge-success">
 				<i class="fa fa-clock-o" aria-hidden="true">&nbsp;</i>
 				{{dueDateSimple}}
 			</span>
@@ -29,21 +63,10 @@
 				<i class="fa fa-clock-o" aria-hidden="true">&nbsp;</i>
 				{{dueDateSimple}}
 			</span>
-			<span class="badge badge-warning" *ngIf="!dueStatus">
+			<span class="badge badge-secondary" *ngIf="!dueStatus">
 				<i class="fa fa-clock-o" aria-hidden="true">&nbsp;</i>
 				{{dueDateSimple}}
 			</span>
 		</div>
 	</div>
 </div>
-<!-- <div class="list-group">
-<a href="#" *ngFor="let task of todo.tasks" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-	{{task.name}}
-	<span class="badge badge-pill" *ngIf="task.done">
-		<i class="fa fa-check" aria-hidden="true"></i>
-	</span>
-	<span class="badge badge-pill" *ngIf="!task.done">
-		<i class="fa fa-clock-o" aria-hidden="true"></i>
-	</span>
-</a>
-</div> -->
