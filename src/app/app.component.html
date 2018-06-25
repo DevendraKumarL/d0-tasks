@@ -1,5 +1,4 @@
-<div class="container">
-	<br />
+<div class="container-fluid">
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<a class="navbar-brand" href="#">
 			<i class="fa fa-laptop" aria-hidden="true"></i> d0
@@ -29,6 +28,58 @@
 			</ul>
 		</div>
 	</nav>
+</div>
+
+<div class="container">
+	<br />
+	<div class="row">
+		<div class="col-lg-3 col-md-3"></div>
+		<div class="col-lg-5 col-md-5">
+			<div class="input-group">
+				<select class="custom-select" (ngModelChange)="switchWS($event)" [ngModel]="d0Service.selectedWS">
+					<option value="All" selected>All</option>
+					<option *ngFor="let ws of d0Service.workspaces" [value]="ws.name">{{ws.name}}</option>
+				</select>
+				<div class="input-group-prepend">
+					<div class="input-group-text">Workspace</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-1 col-md-1">
+			<button type="button" class="btn btn-secondary add-ws-btn" data-toggle="modal" data-target="#wsModal">
+				<i class="fa fa-file" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="New Workspace"></i>
+			</button>
+		</div>
+	</div>
 	<br />
 	<router-outlet></router-outlet>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="wsModal" tabindex="-1" role="dialog" aria-hidden="true" #wsModal>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Create New Workspace</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="">Name</label>
+					<input type="text" name="name" placeholder="Workspace name" class="form-control" [(ngModel)]="wsName" autocomplete="off">
+				</div>
+				<div *ngIf="errOccurred">
+					<div class="alert alert-danger">
+						Oops something went wrong. Could not create a new workspace.
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeWSModal()">Close</button>
+				<button type="button" class="btn btn-primary" (click)="createWS()" *ngIf="wsNameValid()">Create</button>
+			</div>
+		</div>
+	</div>
 </div>

@@ -1,10 +1,17 @@
 <div class="card-columns">
 	<div *ngFor="let todo of d0Service.backlogs">
-		<todo [todo]="todo" [mode]="'backlog'"
-			(editToDoEvent)="invokeEditToDo($event)"
-			(deleteToDoEvent)="invokeDelete($event)"
-			(doneToDoEvent)="invokeDoneToDo($event)">
-		</todo>
+		<div *ngIf="d0Service.selectedWS == 'All'">
+			<todo [todo]="todo" [mode]="'backlog'"
+				(editToDoEvent)="invokeEditToDo($event)" (deleteToDoEvent)="invokeDelete($event)" 
+				(doneToDoEvent)="invokeDoneToDo($event)">
+			</todo>
+		</div>
+		<div *ngIf="d0Service.selectedWS != 'All' && todo.workspace == d0Service.selectedWS">
+			<todo [todo]="todo" [mode]="'backlog'"
+				(editToDoEvent)="invokeEditToDo($event)" (deleteToDoEvent)="invokeDelete($event)"
+				(doneToDoEvent)="invokeDoneToDo($event)">
+			</todo>
+		</div>
 	</div>
 </div>
 

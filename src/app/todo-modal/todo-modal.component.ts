@@ -24,7 +24,8 @@ export class TodoModalComponent {
 		title: undefined,
 		text: undefined,
 		dueDate: undefined,
-		tasks: []
+		tasks: [],
+		workspace: undefined
 	}
 
 	public todoForm: FormGroup;
@@ -39,6 +40,7 @@ export class TodoModalComponent {
 			title: ["", Validators.compose([Validators.required])],
 			text: ["", Validators.compose([Validators.required])],
 			dueDate: ["", Validators.compose([Validators.required])],
+			workspace: ["", Validators.compose([Validators.required])]
 		});
 	}
 
@@ -60,7 +62,8 @@ export class TodoModalComponent {
 			title: undefined,
 			text: undefined,
 			dueDate: undefined,
-			tasks: []
+			tasks: [],
+			workspace: undefined
 		}
 
 		// reset createMode flag
@@ -141,7 +144,8 @@ export class TodoModalComponent {
 			text: todo.text,
 			dueDate: new Date(todo.dueDate).toISOString().substr(0, 10),
 			tasks: JSON.parse(JSON.stringify(todo.tasks)), // Deep clone
-			todoID: todo._id
+			todoID: todo._id,
+			workspace: todo.workspace
 		}
 	}
 

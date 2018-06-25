@@ -47,7 +47,10 @@
 				<i class="fa fa-list-alt" aria-hidden="true"></i>
 			</label>
 			<label *ngFor="let task of todo.tasks" class="checkbox-inline" style="display: block;">
-				<input type="checkbox" [ngModel]="task.done" [value]="task.name" disabled/> {{task.name}}
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" [value]="task.name" [(ngModel)]="task.done" disabled>
+					<span class="custom-control-label">{{task.name}}</span>
+				</div>
 			</label>
 		</p>
 	</div>
@@ -68,5 +71,11 @@
 				{{dueDateSimple}}
 			</span>
 		</div>
+	</div>
+	<div class="todo-workspace">
+		<span class="badge badge-info">
+			<i class="fa fa-tags" aria-hidden="true"></i>
+			{{todo.workspace}}
+		</span>
 	</div>
 </div>

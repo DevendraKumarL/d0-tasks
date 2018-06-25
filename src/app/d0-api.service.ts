@@ -10,6 +10,9 @@ export class D0ApiService {
 	public backlogs: any = [];
 	public done: any = [];
 
+	public workspaces: any = [];
+	public selectedWS: string = "All";
+
 	public totalTodos: number = 0;
 
 	constructor(public client: HttpClient) { }
@@ -75,5 +78,21 @@ export class D0ApiService {
 
 	updateDoneStatus(todoID, done) {
 		return this.client.put(this.API_URL + "todo/" + todoID, { done: done });
+	}
+
+	getAllWorkspaces() {
+		this.workspaces = [];
+		let observableObject = this.client.get(this.API_URL + "workspaces");
+		observableObject.subscribe((workspaces: any) => {
+			console.log("Success response. workspaces: ", workspaces);
+			this.workspaces = workspaces.length > 0 ? workspaces : [];
+		}, (error: any) => {
+			// FIXME: Handle when node server is unreachable
+			console.log("Error response. error: ", error.error.error);
+		});
+	}
+
+	createWorspace(name: string) {
+		return this.client.post(this.API_URL + "workspace", { name: name });
 	}
 }

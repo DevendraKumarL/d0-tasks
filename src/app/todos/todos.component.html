@@ -1,6 +1,6 @@
 <div class="card card-1 add-todo">
 	<button type="button" class="btn btn-outline-light add-todo-btn" data-toggle="modal" data-target="#todoModal">
-		<i class="fa fa-plus" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Add New T0D0"></i>
+		<i class="fa fa-plus" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="New T0D0"></i>
 	</button>
 </div>
 
@@ -10,14 +10,19 @@
 	</div>
 </div>
 
-<br />
-
 <div class="card-columns">
 	<div *ngFor="let todo of d0Service.todos">
 		<div *ngIf="!todo.done && !todo.backlog">
-			<todo [todo]="todo" [mode]="'todos'" (editToDoEvent)="invokeEditToDo($event)" (deleteToDoEvent)="invokeDeleteTodo($event)"
-			 (doneToDoEvent)="invokeDoneToDo($event)">
-			</todo>
+			<div *ngIf="d0Service.selectedWS == 'All'">
+				<todo [todo]="todo" [mode]="'todos'" (editToDoEvent)="invokeEditToDo($event)" (deleteToDoEvent)="invokeDeleteTodo($event)"
+				 (doneToDoEvent)="invokeDoneToDo($event)">
+				</todo>
+			</div>
+			<div *ngIf="d0Service.selectedWS != 'All' && todo.workspace == d0Service.selectedWS">
+				<todo [todo]="todo" [mode]="'todos'" (editToDoEvent)="invokeEditToDo($event)" (deleteToDoEvent)="invokeDeleteTodo($event)"
+				 (doneToDoEvent)="invokeDoneToDo($event)">
+				</todo>
+			</div>
 		</div>
 	</div>
 </div>

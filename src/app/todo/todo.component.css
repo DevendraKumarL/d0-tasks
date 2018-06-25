@@ -44,6 +44,11 @@ button {
 	font-size: 20px;
 }
 
+.todo-workspace {
+	padding-bottom: 10px;
+	padding-left: 10px;
+}
+
 .card {
 	background: rgb(250, 250, 250);
 	border-radius: 2px;

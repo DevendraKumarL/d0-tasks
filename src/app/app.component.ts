@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { D0ApiService } from './d0-api.service';
+
+declare var $: any;
 
 @Component({
 	selector: 'app',
@@ -8,6 +10,44 @@ import { D0ApiService } from './d0-api.service';
 })
 export class AppComponent {
 
-	constructor(public d0Service: D0ApiService) { }
+	@ViewChild("wsModal")
+	public wsModal: ElementRef;
+
+	public wsName: string;
+	public errOccurred: boolean = false;
+
+	constructor(public d0Service: D0ApiService) {
+		this.d0Service.getAllWorkspaces();
+	}
+
+	switchWS(ws) {
+		console.log("switchWS ws => ", ws);
+		this.d0Service.selectedWS = ws;
+	}
+
+	closeWSModal() {
+		this.wsName = null;
+		this.errOccurred = false;
+	}
+
+	wsNameValid() {
+		if (this.wsName) {
+			return true;
+		}
+		return false;
+	}
+
+	createWS() {
+		console.log("wsName: ", this.wsName);
+		this.d0Service.createWorspace(this.wsName).subscribe((response: any) => {
+			console.log("Success response. ws: ", response.workspace);
+			$(this.wsModal.nativeElement).modal("hide");
+			this.closeWSModal();
+			this.d0Service.workspaces.push(response.workspace);
+		}, (error: any) => {
+			console.log("Error response. error: ", error.error.error);
+			this.errOccurred = true;
+		});
+	}
 
 }

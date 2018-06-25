@@ -6,10 +6,14 @@
 
 <div class="card-columns">
 	<div *ngFor="let todo of d0Service.done">
-		<todo [todo]="todo" [mode]="'done'"
-			(deleteToDoEvent)="invokeDeleteTodo($event)"
-			(notDoneToDoEvent)="invokeNotDoneToDo($event)">
-		</todo>
+		<div *ngIf="d0Service.selectedWS == 'All'">
+			<todo [todo]="todo" [mode]="'done'" (deleteToDoEvent)="invokeDeleteTodo($event)" (notDoneToDoEvent)="invokeNotDoneToDo($event)">
+			</todo>
+		</div>
+		<div *ngIf="d0Service.selectedWS != 'All' && todo.workspace == d0Service.selectedWS">
+			<todo [todo]="todo" [mode]="'done'" (deleteToDoEvent)="invokeDeleteTodo($event)" (notDoneToDoEvent)="invokeNotDoneToDo($event)">
+			</todo>
+		</div>
 	</div>
 </div>
 
