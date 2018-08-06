@@ -63,7 +63,7 @@ export class TodoModalComponent {
 			text: undefined,
 			dueDate: undefined,
 			tasks: [],
-			workspace: undefined
+			workspace: this.d0Service.selectedWS
 		}
 
 		// reset createMode flag

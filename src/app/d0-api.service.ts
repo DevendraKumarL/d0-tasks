@@ -11,11 +11,11 @@ export class D0ApiService {
 	public done: any = [];
 
 	public workspaces: any = [];
-	public selectedWS: string = "All";
+	public selectedWS: string;
 
 	public totalTodos: number = 0;
 
-	constructor(public client: HttpClient) { }
+	constructor(public client: HttpClient) {}
 
 	getToDos() {
 		this.todos = [];
@@ -81,11 +81,11 @@ export class D0ApiService {
 	}
 
 	getAllWorkspaces() {
-		this.workspaces = [];
 		let observableObject = this.client.get(this.API_URL + "workspaces");
 		observableObject.subscribe((workspaces: any) => {
 			console.log("Success response. workspaces: ", workspaces);
 			this.workspaces = workspaces.length > 0 ? workspaces : [];
+			this.selectedWS = this.workspaces[0].name;
 		}, (error: any) => {
 			// FIXME: Handle when node server is unreachable
 			console.log("Error response. error: ", error.error.error);

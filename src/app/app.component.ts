@@ -28,6 +28,7 @@ export class AppComponent {
 	closeWSModal() {
 		this.wsName = null;
 		this.errOccurred = false;
+		$(this.wsModal.nativeElement).modal("hide");
 	}
 
 	wsNameValid() {
@@ -41,9 +42,8 @@ export class AppComponent {
 		console.log("wsName: ", this.wsName);
 		this.d0Service.createWorspace(this.wsName).subscribe((response: any) => {
 			console.log("Success response. ws: ", response.workspace);
-			$(this.wsModal.nativeElement).modal("hide");
-			this.closeWSModal();
 			this.d0Service.workspaces.push(response.workspace);
+			this.closeWSModal();
 		}, (error: any) => {
 			console.log("Error response. error: ", error.error.error);
 			this.errOccurred = true;

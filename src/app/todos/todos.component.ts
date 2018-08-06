@@ -7,7 +7,6 @@ import { TodoModalComponent } from '../todo-modal/todo-modal.component';
 declare var $: any;
 
 /* TODO: Mark individal todo done when there are tasks in it */
-/* TODO:  */
 
 @Component({
 	selector: 'todos',

@@ -23,7 +23,7 @@
 					<div class="form-group">
 						<label>Workspace</label>
 						<select name="Workspace" class="custom-select" [(ngModel)]="todoData.workspace" formControlName="workspace">
-							<option *ngFor="let ws of d0Service.workspaces" [value]="ws.name">{{ws.name}}</option>
+							<option *ngFor="let ws of d0Service.workspaces" [selected]="ws.name" [value]="ws.name">{{ws.name}}</option>
 						</select>
 					</div>
 					<div class="form-group">
