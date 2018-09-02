@@ -29,6 +29,11 @@ export class TodosComponent {
 	public deleteTodoID: string;
 	public doneTodoID: string;
 
+	public undoPopup: boolean;
+	public delTodoTmp: any;
+	public undoInterval: any;
+	public beingDeleted: boolean;
+
 	public errorOccured: boolean = false;
 	public errorMessage: string;
 
@@ -46,6 +51,10 @@ export class TodosComponent {
 		// clear error messages and flags
 		this.errorOccured = false;
 		this.errorMessage = "";
+
+		this.undoPopup = false;
+		this.delTodoTmp = {};
+		this.beingDeleted = false;
 	}
 
 	invokeEditToDo(todo) {
@@ -58,19 +67,42 @@ export class TodosComponent {
 
 	deleteToDo() {
 		if (this.deleteTodoID !== undefined) {
-			this.d0Service.deleteToDo(this.deleteTodoID).subscribe((response: any) => {
-				console.log("Success response. success: ", response.success);
-				$(this.delConfirmModal.nativeElement).modal("hide");
-				// Get the new updated list of todos
-				this.d0Service.getToDos();
-			}, (error: any) => {
-				console.log("Error response. error: ", error);
-				$(this.delConfirmModal.nativeElement).modal("hide");
-				// FIXME: Handle when api server is down
-				this.errorOccured = true;
-				this.errorMessage = error.error.error;
-			});
+			$(this.delConfirmModal.nativeElement).modal("hide");
+			for(let i = 0; i < this.d0Service.todos.length; i++) {
+				if (this.d0Service.todos[i]._id === this.deleteTodoID) {
+					this.delTodoTmp = this.d0Service.todos[i];
+					this.delTodoTmp.todoDeleting = true;
+					this.undoPopup = true;
+					this.beingDeleted = true;
+					break;
+				}
+			}
+			this.undoInterval = setTimeout(() => {
+				this.d0Service.deleteToDo(this.deleteTodoID).subscribe((response: any) => {
+					console.log("Success response. success: ", response.success);
+					this.delTodoTmp = {};
+					this.undoPopup = false;
+					this.beingDeleted = false;
+					// Get the new updated list of todos
+					this.d0Service.getToDos();
+				}, (error: any) => {
+					console.log("Error response. error: ", error);
+					// FIXME: Handle when api server is down
+					this.errorOccured = true;
+					this.errorMessage = error.error.error;
+					this.delTodoTmp = {};
+					this.undoPopup = false;
+				});
+			}, 5000);
 		}
+	}
+
+	undoDeleteTodo() {
+		clearInterval(this.undoInterval);
+		this.delTodoTmp.todoDeleting = false;
+		this.undoPopup = false;
+		this.delTodoTmp = {};
+		this.beingDeleted = false;
 	}
 
 	invokeDoneToDo(todoID) {

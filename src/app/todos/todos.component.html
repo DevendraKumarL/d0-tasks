@@ -15,24 +15,32 @@
 		<div *ngIf="!todo.done && !todo.backlog">
 			<div *ngIf="d0Service.selectedWS == 'All'">
 				<todo [todo]="todo" [mode]="'todos'" (editToDoEvent)="invokeEditToDo($event)" (deleteToDoEvent)="invokeDeleteTodo($event)"
-				 (doneToDoEvent)="invokeDoneToDo($event)">
+				 (doneToDoEvent)="invokeDoneToDo($event)" [beingDeleted]="beingDeleted">
 				</todo>
 			</div>
 			<div *ngIf="d0Service.selectedWS != 'All' && todo.workspace == d0Service.selectedWS">
 				<todo [todo]="todo" [mode]="'todos'" (editToDoEvent)="invokeEditToDo($event)" (deleteToDoEvent)="invokeDeleteTodo($event)"
-				 (doneToDoEvent)="invokeDoneToDo($event)">
+				 (doneToDoEvent)="invokeDoneToDo($event)" [beingDeleted]="beingDeleted">
 				</todo>
 			</div>
 		</div>
 	</div>
 </div>
 
+
+<div class="undo-del" *ngIf="undoPopup">
+	<kbd style="padding: 5px;">
+		T0D0 deleted.<button class="btn btn-sm btn-link undo-font" (click)="undoDeleteTodo()">Undo?</button>
+	</kbd>
+</div>
+
+
 <!-- T0D0 Modal -->
 <todo-modal [createMode]="createMode"></todo-modal>
 
 <!-- Delete TODO Confirmation modal -->
 <div class="modal fade" #delConfirmModal id="deleteConfirm" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Confirm Deletion</h5>
@@ -53,7 +61,7 @@
 
 <!-- Done TODO Confirmation modal -->
 <div class="modal fade" #doneConfirmModal id="doneConfirm" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Confirm Done</h5>

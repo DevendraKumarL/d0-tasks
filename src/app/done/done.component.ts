@@ -13,6 +13,11 @@ export class DoneComponent {
 	@Input()
 	public todo: any;
 
+	public undoPopup: boolean;
+	public delTodoTmp: any;
+	public undoInterval: any;
+	public beingDeleted: boolean;
+
 	@ViewChild("notDoneConfirmModal")
 	public notDoneConfModal: ElementRef;
 
@@ -65,19 +70,42 @@ export class DoneComponent {
 
 	deleteToDo() {
 		if (this.deleteTodoID !== undefined) {
-			this.d0Service.deleteToDo(this.deleteTodoID).subscribe((response: any) => {
-				console.log("Success response. response: ", response);
-				$(this.delConfirmModal.nativeElement).modal("hide");
-				// get the updated list of todos now
-				this.d0Service.getToDos();
-			}, (error: any) => {
-				console.log("Error response. error: ", error);
-				$(this.delConfirmModal.nativeElement).modal("hide");
-				// FIXME: Handle when api server is down
-				this.errorOccured = true;
-				this.errorMsg = error.error.error;
-			});
+			$(this.delConfirmModal.nativeElement).modal("hide");
+			for(let i = 0; i < this.d0Service.done.length; i++) {
+				if (this.d0Service.done[i]._id === this.deleteTodoID) {
+					this.delTodoTmp = this.d0Service.done[i]
+					this.delTodoTmp.todoDeleting = true;
+					this.undoPopup = true;
+					this.beingDeleted = true;
+					console.log(this.delTodoTmp);
+					break;
+				}
+			}
+			this.undoInterval = setTimeout(() => {
+				this.d0Service.deleteToDo(this.deleteTodoID).subscribe((response: any) => {
+					console.log("Success response. success: ", response.success);
+					this.delTodoTmp = {};
+					this.undoPopup = false;
+					this.beingDeleted = false;
+					// Get the new updated list of todos
+					this.d0Service.getToDos();
+				}, (error: any) => {
+					console.log("Error response. error: ", error);
+					// FIXME: Handle when api server is down
+					this.errorOccured = true;
+					this.errorMsg = error.error.error;
+					this.delTodoTmp = {};
+					this.undoPopup = false;
+				});
+			}, 5000);
 		}
 	}
 
+	undoDeleteTodo() {
+		clearInterval(this.undoInterval);
+		this.delTodoTmp.todoDeleting = false;
+		this.undoPopup = false;
+		this.delTodoTmp = {};
+		this.beingDeleted = false;
+	}
 }

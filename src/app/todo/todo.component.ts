@@ -13,7 +13,8 @@ export class TodoComponent {
 	public todo: any;
 	@Input()
 	public mode: string;
-
+	@Input()
+	public beingDeleted: boolean;
 
 	@Output()
 	public editToDoEvent: EventEmitter<any> = new EventEmitter<any>();

@@ -5,7 +5,7 @@
 			<button type="button" (click)="invokeEditToDo($event)" data-toggle="modal" data-target="#todoModal" class="btn btn-outline-primary btn-sm">
 				<i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Edit"></i>
 			</button>
-			<button type="button" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteToDo($event)" class="btn btn-outline-danger btn-sm">
+			<button type="button" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteToDo($event)" class="btn btn-outline-danger btn-sm" [disabled]="beingDeleted">
 				<i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Delete"></i>
 			</button>
 			<button type="button" *ngIf="todo.tasks.length === 0 || todo.allTasksDone" data-toggle="modal" data-target="#doneConfirm"
@@ -17,7 +17,7 @@
 			<button type="button" (click)="invokeNotDoneToDo($event)" data-toggle="modal" data-target="#notDoneConfirm" class="btn btn-outline-secondary btn-sm">
 				<i class="fa fa-times-circle" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Not Done"></i>
 			</button>
-			<button type="button" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteToDo($event)" class="btn btn-outline-danger btn-sm">
+			<button type="button" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteToDo($event)" class="btn btn-outline-danger btn-sm" [disabled]="beingDeleted">
 				<i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Delete"></i>
 			</button>
 		</div>
@@ -25,7 +25,7 @@
 			<button type="button" (click)="invokeEditToDo($event)" data-toggle="modal" data-target="#todoModal" class="btn btn-outline-primary btn-sm">
 				<i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Edit"></i>
 			</button>
-			<button type="button" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteToDo($event)" class="btn btn-outline-danger btn-sm">
+			<button type="button" data-toggle="modal" data-target="#deleteConfirm" (click)="invokeDeleteToDo($event)" class="btn btn-outline-danger btn-sm" [disabled]="beingDeleted">
 				<i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Delete"></i>
 			</button>
 			<button type="button" *ngIf="todo.tasks.length === 0 || todo.allTasksDone" data-toggle="modal" data-target="#doneConfirm"
@@ -78,4 +78,6 @@
 			{{todo.workspace}}
 		</span>
 	</div>
+	<div class="del-card-overlay" *ngIf="todo.todoDeleting"></div>
+	<div class="del-overlay-text" *ngIf="todo.todoDeleting">Deleting</div>
 </div>

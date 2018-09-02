@@ -25,3 +25,16 @@
 .card-1:hover {
 	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
+
+.undo-del {
+	position: fixed;
+	z-index: 10;
+	bottom: 25px;
+    left: 25px;
+    font-size: 20px;
+    vertical-align: center;
+}
+
+.undo-font {
+    font-size: 20px;
+}

@@ -1,0 +1,12 @@
+.undo-del {
+	position: fixed;
+	z-index: 10;
+	bottom: 25px;
+    left: 25px;
+    font-size: 20px;
+    vertical-align: center;
+}
+
+.undo-font {
+    font-size: 20px;
+}
