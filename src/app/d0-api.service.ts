@@ -11,7 +11,7 @@ export class D0ApiService {
 	public done: any = [];
 
 	public workspaces: any = [];
-	public selectedWS: string;
+	public selectedWS: string = "All";
 
 	public totalTodos: number = 0;
 
@@ -85,7 +85,6 @@ export class D0ApiService {
 		observableObject.subscribe((workspaces: any) => {
 			console.log("Success response. workspaces: ", workspaces);
 			this.workspaces = workspaces.length > 0 ? workspaces : [];
-			this.selectedWS = this.workspaces[0].name;
 		}, (error: any) => {
 			// FIXME: Handle when node server is unreachable
 			console.log("Error response. error: ", error.error.error);

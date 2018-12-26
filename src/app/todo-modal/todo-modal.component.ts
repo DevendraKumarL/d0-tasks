@@ -20,13 +20,7 @@ export class TodoModalComponent {
 	@ViewChild("todoModal")
 	public todoModal: ElementRef;
 
-	public todoData: any = {
-		title: undefined,
-		text: undefined,
-		dueDate: undefined,
-		tasks: [],
-		workspace: undefined
-	}
+	public todoData: any;
 
 	public todoForm: FormGroup;
 
@@ -36,11 +30,18 @@ export class TodoModalComponent {
 	public tasksErrMsg: string;
 
 	constructor(public d0Service: D0ApiService, public formBuilder: FormBuilder) {
+		console.log("this.d0Service.selectedWS : ", this.d0Service.selectedWS);
+		this.todoData = {
+			title: undefined,
+			text: undefined,
+			dueDate: undefined,
+			tasks: [],
+			workspace: this.d0Service.selectedWS
+		};
 		this.todoForm = this.formBuilder.group({
 			title: ["", Validators.compose([Validators.required])],
 			text: ["", Validators.compose([Validators.required])],
-			dueDate: ["", Validators.compose([Validators.required])],
-			workspace: ["", Validators.compose([Validators.required])]
+			dueDate: ["", Validators.compose([Validators.required])]
 		});
 	}
 
@@ -95,11 +96,16 @@ export class TodoModalComponent {
 		return true;
 	}
 
+	invokeAddToDo() {
+		this.todoData.workspace = this.d0Service.selectedWS;
+		console.log("invokeAddToDo :: ", this.todoData.workspace);
+	}
+
 	createToDo() {
 		if (!this.checkTasksEmpty()) {
 			return
 		}
-		this.todoData.dueDate = this.calculateDueDate(this.todoData.dueDate);		
+		this.todoData.dueDate = this.calculateDueDate(this.todoData.dueDate);
 		console.log("T0D0: ", this.todoData);
 		this.d0Service.addToDo(this.todoData).subscribe((response: any) => {
 			console.log("Sucess response. message: ", response.success);
@@ -137,6 +143,7 @@ export class TodoModalComponent {
 	}
 
 	invokeEditToDo(todo) {
+		console.log("invokeEditToDo");
 		this.createMode = false;
 		// check with todo form
 		this.todoData = {

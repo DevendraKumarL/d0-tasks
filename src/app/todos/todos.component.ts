@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { D0ApiService } from '../d0-api.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TodoModalComponent } from '../todo-modal/todo-modal.component';
 
 // Manually declare $ so that we can use it for jQeury within Angular Component
@@ -55,6 +54,10 @@ export class TodosComponent {
 		this.undoPopup = false;
 		this.delTodoTmp = {};
 		this.beingDeleted = false;
+	}
+
+	invokeAddToDo() {
+		this.todoModalChildComp.invokeAddToDo();
 	}
 
 	invokeEditToDo(todo) {

@@ -37,7 +37,7 @@
 		<div class="col-lg-5 col-md-5">
 			<div class="input-group">
 				<select class="custom-select" (ngModelChange)="switchWS($event)" [ngModel]="d0Service.selectedWS">
-					<option *ngFor="let ws of d0Service.workspaces" [selected]="ws.name" [value]="ws.name">{{ws.name}}</option>
+					<option *ngFor="let ws of d0Service.workspaces" [value]="ws.name">{{ws.name}}</option>
 				</select>
 				<div class="input-group-prepend">
 					<div class="input-group-text">Workspace</div>

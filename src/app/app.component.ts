@@ -21,8 +21,8 @@ export class AppComponent {
 	}
 
 	switchWS(ws) {
-		console.log("switchWS ws => ", ws);
 		this.d0Service.selectedWS = ws;
+		console.log("switchWS ws => ", this.d0Service.selectedWS);
 	}
 
 	closeWSModal() {
